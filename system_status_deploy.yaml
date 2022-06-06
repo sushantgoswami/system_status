@@ -1,0 +1,30 @@
+---
+- hosts: INFO
+  gather_facts: false
+
+  tasks:
+
+    - name: Cleanup of old installer
+      file:
+        path: /tmp/system_status
+        state: absent
+
+    - name: Cleanup old inataller zip file
+      file:
+        path: /tmp/system_status.tar.gz
+        state: absent
+
+    - name: Copy script to server
+      copy:
+        src: /root/c188578/system_status.tar.gz
+        dest: /tmp/
+        mode: 0755
+
+    - name: Unarchive a file that is already on the remote machine
+      unarchive:
+        src: /tmp/system_status.tar.gz
+        dest: /tmp
+        remote_src: yes
+
+    - name: Go to the folder and execute installer
+      shell: cd /tmp/system_status; /tmp/system_status/installer
