@@ -106,7 +106,7 @@ fi
 
 echo "=================================================================================================================" >> $WORKDIR/$LOGDIR/$LOGFILE-process-count-$CURRENTDATE.txt
 echo "(MSG 006): Below is the process count for users" | sed -e "s/^/$(date | awk '{print $3"-"$2"-"$6"-"$4}') /" >> $WORKDIR/$LOGDIR/$LOGFILE-process-count-$CURRENTDATE.txt
-ps -elfT | awk '{print $3}'  | sort | uniq -c | awk '{print $2, " ", $1}'  | column -t  | sed -e "s/^/$(date | awk '{print $3"-"$2"-"$6"-"$4}') /" >> $WORKDIR/$LOGDIR/$LOGFILE-process-count-$CURRENTDATE.txt
+ps -elfT | awk '{print $3" "$16}' | egrep -v "kworker|irq|scsi|xfs" | uniq -c | sort -nr | head -15 | sed -e "s/^/$(date | awk '{print $3"-"$2"-"$6"-"$4}') /" >> $WORKDIR/$LOGDIR/$LOGFILE-process-count-$CURRENTDATE.txt
 
 #################### Mailing report ####################
 if [ $CURRENT_HOUR -gt $REPORT_HOUR ] && [ $EMAIL_SEND == 1 ] && [ $CURRENT_HOUR -lt `expr $REPORT_HOUR + 5` ]; then
